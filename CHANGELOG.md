@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.7.0] - 2026-06-02
 
 ### Added
 
@@ -19,6 +19,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `alert create` / `notification create` with `--channel-type slack` no longer returns `400 Bad Request: {"specific-errors":{"handlers":[{"channel_type":["unknown error, received: :slack"]}]}}`. The CLI now canonicalizes the channel type to the `channel/slack` / `channel/email` form Metabase v0.59+ requires. Both the bare (`slack`) and prefixed (`channel/slack`) forms are accepted.
 - `notification create --schedule` no longer attaches a raw cron string to `handlers[].schedule` (which the v0.59+ API silently ignored). The cron is now mounted at the notification level as `subscriptions[{type: "notification-subscription/cron", cron_schedule: "..."}]`, matching the server-side payload model.
 - `AlertApi.create` / `AlertApi.update` translate `alert_condition` + `alert_above_goal` → `send_condition` (`has_result` / `goal_above` / `goal_below`) and `alert_first_only` → `send_once`, matching the renamed payload fields in v0.59+. Older callers can keep using the legacy field names; the translation is internal.
+- `alert create` now canonicalizes `--channel-type` before validating Slack handlers, so the prefixed form (`channel/slack`) is checked the same as the bare form (`slack`). Previously the prefixed form skipped the guard and could emit a Slack handler with no recipients.
+- `alert update --above-goal` without an explicit `--condition` now implies a goal condition instead of falling back to `rows` / `has_result`, which silently downgraded a goal alert.
+
+### Security
+
+- Resolved all open `npm audit` advisories (dev dependencies): `brace-expansion` (ReDoS — GHSA-f886-m6hf-6m8v, GHSA-jxxr-4gwj-5jf2), `postcss` <8.5.10 (XSS in CSS stringify — GHSA-qx2v-qp2m-jg93), and `vitest` 3 → 4.1.8 (critical UI-server arbitrary file read/exec — GHSA-5xrq-8626-4rwp). `npm audit` now reports 0 vulnerabilities. No runtime dependencies changed.
 
 ## [0.6.1] - 2026-04-20
 

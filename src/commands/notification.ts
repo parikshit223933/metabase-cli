@@ -12,7 +12,7 @@ import {
   userRecipient,
 } from "../api/notification.js";
 import { formatEntityTable, formatJson } from "../utils/output.js";
-import { resolveClient } from "./helpers.js";
+import { resolveClient, parseIntArg } from "./helpers.js";
 
 function parseSendCondition(raw: string): NotificationSendCondition {
   const v = raw.toLowerCase();
@@ -86,7 +86,7 @@ Examples:
   cmd
     .command("create")
     .description("Create a new notification")
-    .requiredOption("--card <id>", "Card ID to notify on", parseInt)
+    .requiredOption("--card <id>", "Card ID to notify on", parseIntArg)
     .option(
       "--channel-type <type>",
       "Channel type: email, slack (accepts bare or channel/-prefixed values)",

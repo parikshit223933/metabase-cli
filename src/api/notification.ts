@@ -153,7 +153,8 @@ export function cronSubscription(cron: string): NotificationCronSubscription {
 export function toUpdateRecipient(r: Record<string, unknown>): NotificationRecipient {
   const out: NotificationRecipient = { type: r.type as NotificationRecipient["type"] };
   if (r.id != null) out.id = r.id as number;
-  if (r.notification_handler_id != null) out.notification_handler_id = r.notification_handler_id as number;
+  if (r.notification_handler_id != null)
+    out.notification_handler_id = r.notification_handler_id as number;
   if (r.user_id != null) out.user_id = r.user_id as number;
   if (r.details && typeof r.details === "object") out.details = r.details as { value: string };
   if (r.permissions_group_id != null) out.permissions_group_id = r.permissions_group_id as number;
@@ -194,7 +195,9 @@ export function toUpdateSubscription(s: Record<string, unknown>): NotificationSu
  * update body the v0.59+ PUT accepts. Preserves a null payload as-is so a
  * malformed/orphan notification can still be archived.
  */
-export function notificationToUpdateBody(current: Record<string, unknown>): UpdateNotificationParams {
+export function notificationToUpdateBody(
+  current: Record<string, unknown>,
+): UpdateNotificationParams {
   const body: UpdateNotificationParams = {
     payload_type: (current.payload_type as "notification/card") ?? "notification/card",
     active: current.active as boolean,
@@ -219,7 +222,9 @@ export function notificationToUpdateBody(current: Record<string, unknown>): Upda
     body.handlers = (current.handlers as Record<string, unknown>[]).map(toUpdateHandler);
   }
   if (Array.isArray(current.subscriptions)) {
-    body.subscriptions = (current.subscriptions as Record<string, unknown>[]).map(toUpdateSubscription);
+    body.subscriptions = (current.subscriptions as Record<string, unknown>[]).map(
+      toUpdateSubscription,
+    );
   }
   return body;
 }
@@ -235,7 +240,10 @@ export function mergeNotificationUpdate(
   base: UpdateNotificationParams,
   changes: UpdateNotificationParams,
 ): UpdateNotificationParams {
-  const merged: UpdateNotificationParams = { ...base, payload_type: changes.payload_type ?? base.payload_type };
+  const merged: UpdateNotificationParams = {
+    ...base,
+    payload_type: changes.payload_type ?? base.payload_type,
+  };
 
   if (changes.payload !== undefined) {
     merged.payload =
@@ -247,7 +255,9 @@ export function mergeNotificationUpdate(
   }
 
   if (changes.subscriptions !== undefined) {
-    merged.subscriptions = changes.subscriptions.map((s, i) => inheritId(s, base.subscriptions?.[i]));
+    merged.subscriptions = changes.subscriptions.map((s, i) =>
+      inheritId(s, base.subscriptions?.[i]),
+    );
   }
 
   if (changes.active !== undefined) merged.active = changes.active;

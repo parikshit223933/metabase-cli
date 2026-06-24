@@ -283,7 +283,12 @@ describe("AlertApi", () => {
       { type: "notification-subscription/cron", cron_schedule: "0 30 * * * ?", id: 7 },
     ]);
     // Payload preserved unchanged (with id).
-    expect(body.payload).toEqual({ id: 100, card_id: 10, send_condition: "has_result", send_once: false });
+    expect(body.payload).toEqual({
+      id: 100,
+      card_id: 10,
+      send_condition: "has_result",
+      send_once: false,
+    });
   });
 
   it("delete(1) → PUT full body (ids preserved) with active:false (archive in place)", async () => {
@@ -313,7 +318,9 @@ describe("AlertApi", () => {
       payload_type: "notification/card",
       payload: null,
       handlers: [],
-      subscriptions: [{ id: 1, type: "notification-subscription/cron", cron_schedule: "0 30 * * * ?" }],
+      subscriptions: [
+        { id: 1, type: "notification-subscription/cron", cron_schedule: "0 30 * * * ?" },
+      ],
       active: true,
     };
     globalThis.fetch = mockFetchSeq([orphan]);
@@ -632,7 +639,9 @@ describe("NotificationApi", () => {
           recipients: [{ id: 9, type: "notification-recipient/user", user_id: 3 }],
         },
       ],
-      subscriptions: [{ id: 7, type: "notification-subscription/cron", cron_schedule: "0 0 * * * ?" }],
+      subscriptions: [
+        { id: 7, type: "notification-subscription/cron", cron_schedule: "0 0 * * * ?" },
+      ],
       active: true,
     };
     globalThis.fetch = mockFetchSeq([current, { id: 1 }]);
@@ -650,9 +659,15 @@ describe("NotificationApi", () => {
       creator_id: 4,
       payload: { id: 100, card_id: 10, send_condition: "has_result" },
       handlers: [
-        { id: 5, channel_type: "channel/email", recipients: [{ id: 9, type: "notification-recipient/user", user_id: 3 }] },
+        {
+          id: 5,
+          channel_type: "channel/email",
+          recipients: [{ id: 9, type: "notification-recipient/user", user_id: 3 }],
+        },
       ],
-      subscriptions: [{ id: 7, type: "notification-subscription/cron", cron_schedule: "0 0 * * * ?" }],
+      subscriptions: [
+        { id: 7, type: "notification-subscription/cron", cron_schedule: "0 0 * * * ?" },
+      ],
       active: false,
     });
   });

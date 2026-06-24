@@ -1,5 +1,10 @@
 import { Command } from "commander";
-import { AlertApi, type AlertChannel, channelToCron, type UpdateAlertParams } from "../api/alert.js";
+import {
+  AlertApi,
+  type AlertChannel,
+  channelToCron,
+  type UpdateAlertParams,
+} from "../api/alert.js";
 import { canonicalizeChannelType } from "../api/notification.js";
 import { formatEntityTable, formatJson } from "../utils/output.js";
 import { resolveClient, parseIntArg } from "./helpers.js";
@@ -236,7 +241,8 @@ Examples:
             channel_type: opts.channelType || "email",
             enabled: true,
             schedule_type: opts.scheduleType,
-            schedule_hour: opts.scheduleHour !== undefined ? parseInt(opts.scheduleHour) : undefined,
+            schedule_hour:
+              opts.scheduleHour !== undefined ? parseInt(opts.scheduleHour) : undefined,
           });
       }
 
